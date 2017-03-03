@@ -5,7 +5,7 @@ import queue
 
 class BestFirstSearch(object):
 	
-	pq = pq = queue.PriorityQueue()
+	pq = queue.PriorityQueue()
 	heuristicValues = []
 	numberOfNodes = 0
 	def __init__(self, numberOfNodes):
@@ -15,7 +15,7 @@ class BestFirstSearch(object):
 	def bestFirstSearch(self, adjMatrix, heuristicValues, source):
 		evaluationNode = 0
 		destinationNode = 0
-		visited = {}
+		visited = [0 for x in range(100)]
 		self.heuristicValues = heuristicValues
 		#print (self.heuristicValues[source])
 		self.pq.put(Vertex(source, self.heuristicValues[source]))
@@ -25,26 +25,34 @@ class BestFirstSearch(object):
 		while not self.pq.empty():
 
 			evaluationNode = self.getMinNode()
-			#print (evaluationNode)
+			destinationNode = 0
+
+			print (evaluationNode, )
+
+			while (destinationNode < self.numberOfNodes):
+				
+				#print (self.heuristicValues[destinationNode])
+				v = Vertex(destinationNode, self.heuristicValues[destinationNode])
+				
+				if (adjMatrix[evaluationNode][destinationNode] != 9999 and evaluationNode!=destinationNode and visited[destinationNode] == 0):
+					self.pq.put(v)
+					visited[destinationNode] = 1
+				destinationNode = destinationNode + 1
 
 	def getMinNode(self):
 			v = self.pq.get()
 			return v.node		
 
-class Vertex(object):
+class Vertex:
 	"""docstring for Vertex"""
 	heuristicValue = 0
 	node = 0
 	def __init__(self, node, heuristicValue):
 		self.heuristicValue = heuristicValue
 		self.node = node
-	def compare(vertex1, vertex2):
+	def __lt__(self, other):
 		
-		if (vertex1.heuriticValue < vertex2.heuriticValue):
-			return -1
-		if (vertex1.heuriticValue > vertex2.heuriticValue):
-			return 1
-		return 0
+		return self.heuristicValue < other.heuristicValue
 
 
 
