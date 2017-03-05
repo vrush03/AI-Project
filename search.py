@@ -3,6 +3,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import queue
 
+displayNode = []
+weighVal = []
 class BestFirstSearch(object):
 	
 	pq = queue.PriorityQueue()
@@ -28,6 +30,7 @@ class BestFirstSearch(object):
 			destinationNode = 0
 
 			print (evaluationNode, )
+			displayNode.append(evaluationNode)
 
 			while (destinationNode < self.numberOfNodes):
 				
@@ -41,10 +44,11 @@ class BestFirstSearch(object):
 
 	def getMinNode(self):
 			v = self.pq.get()
+			weighVal.append(v.heuristicValue)
 			return v.node		
 
 class Vertex:
-	"""docstring for Vertex"""
+	
 	heuristicValue = 0
 	node = 0
 	def __init__(self, node, heuristicValue):
@@ -52,7 +56,7 @@ class Vertex:
 		self.node = node
 	def __lt__(self, other):
 		
-		return self.heuristicValue < other.heuristicValue
+		return self.heuristicValue > other.heuristicValue
 
 
 
@@ -78,4 +82,18 @@ print ("Result of Greedy Best First Search:")
 
 BFS = BestFirstSearch(n)
 BFS.bestFirstSearch(adjMatrix, heuristicValues, source)
+
+G = nx.Graph()
+
+for i in range(len(displayNode)-1):
+	G.add_edge(displayNode[i],displayNode[i+1],weight = weighVal[i])
+
+
+
+#pos=nx.get_node_attributes(G,'pos')
+pos = nx.spring_layout(G)
+nx.draw(G,pos)
+labels = nx.get_edge_attributes(G,'weight')
+nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
+plt.show()
 
